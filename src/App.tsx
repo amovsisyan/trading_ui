@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from "react";
+import Web3Provider, {Connectors} from "web3-react";
+import {Container} from '@mui/material';
+// @ts-ignore
+import {Provider} from 'react-redux';
+// @ts-ignore
+import {BrowserRouter as Router, Switch, Route,} from "react-router-dom";
+import {AuthComponent} from "./components/AuthComponent";
+import {DepositComponent} from "./components/DepositComponent.";
+import {store} from './store'
+import {TradingComponent} from "./components/TradingComponent";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const MetaMask = new Connectors.InjectedConnector({
+    supportedNetworks: [1, 3, 4, 5, 42],
+});
+const connectors = {MetaMask};
+
+class App extends Component {
+    render() {
+        return (
+            <Router>
+                <Provider store={store}>
+                    <Web3Provider connectors={connectors} libraryName="ethers.js">
+                        <Container fixed>
+                            <Switch>
+                                <Route path="/trading">
+                                    <TradingComponent/>
+                                </Route>
+                                <Route path="/deposit">
+                                    <DepositComponent/>
+                                </Route>
+                                <Route path="/">
+                                    <AuthComponent/>
+                                </Route>
+                            </Switch>
+                        </Container>
+                    </Web3Provider>
+                </Provider>
+            </Router>
+        );
+    }
 }
 
 export default App;
